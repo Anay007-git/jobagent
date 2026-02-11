@@ -22,7 +22,7 @@ export async function getProfile() {
         .from('profiles')
         .select('*')
         .eq('user_id', userId)
-        .single()
+        .maybeSingle()
 
     if (error && error.code !== 'PGRST116') console.error('getProfile:', error)
     if (!data) return null
@@ -78,7 +78,7 @@ export async function getResumeText() {
         .from('profiles')
         .select('resume_text')
         .eq('user_id', userId)
-        .single()
+        .maybeSingle()
 
     if (error && error.code !== 'PGRST116') console.error('getResumeText:', error)
     return data?.resume_text || ''
