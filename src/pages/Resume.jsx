@@ -93,6 +93,12 @@ export default function Resume() {
             const strings = content.items.map(item => item.str)
             fullText += strings.join(' ') + '\n'
         }
+
+        console.log('Extracted PDF Text Length:', fullText.length)
+        if (fullText.length < 50) console.warn('Short text extracted:', fullText)
+
+        if (!fullText.trim()) throw new Error('No text found in PDF. Is it a scanned image?')
+
         return fullText
     }
 
