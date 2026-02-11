@@ -107,3 +107,7 @@ const DOMAIN_KEYWORDS = [
     { name: 'Data', keywords: ['Data Science', 'Machine Learning', 'Big Data', 'SQL', 'Python', 'Analytics'] },
     { name: 'Mobile', keywords: ['React Native', 'Flutter', 'iOS', 'Android', 'Swift', 'Kotlin'] },
 ]
+
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
