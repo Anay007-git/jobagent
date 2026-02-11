@@ -32,13 +32,22 @@ export function parseResume(text) {
     const years = yearsMatch ? parseInt(yearsMatch[1]) : 0
 
     // Detect skills from keywords
-    const detectedSkills = SKILL_KEYWORDS.filter(skill =>
-        new RegExp(`\\b${skill}\\b`, 'i').test(text)
-    )
+    const detectedSkills = SKILL_KEYWORDS.filter(skill => {
+        const escaped = escapeRegExp(skill)
+        // Use \b only if the skill starts/ends with a word character
+        const prefix = /^\w/.test(skill) ? '\\b' : ''
+        const suffix = /\w$/.test(skill) ? '\\b' : ''
+        return new RegExp(`${prefix}${escaped}${suffix}`, 'i').test(text)
+    })
 
     // Detect Domain
     const domains = DOMAIN_KEYWORDS.filter(d =>
-        d.keywords.some(k => new RegExp(`\\b${k}\\b`, 'i').test(text))
+        d.keywords.some(k => {
+            const escaped = escapeRegExp(k)
+            const prefix = /^\w/.test(k) ? '\\b' : ''
+            const suffix = /\w$/.test(k) ? '\\b' : ''
+            return new RegExp(`${prefix}${escaped}${suffix}`, 'i').test(text)
+        })
     ).map(d => d.name)
 
     // Detect Seniority
