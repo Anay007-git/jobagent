@@ -101,11 +101,25 @@ async function runJobAgent() {
 
     for (const profile of profiles) {
         if (!profile.email) continue
+
+        // Check if agent is enabled (default true)
+        if (profile.agent_enabled === false) {
+            console.log(`Skipping ${profile.email} (Agent disabled)`)
+            continue
+        }
+
         console.log(`Processing ${profile.email}...`)
 
         const skills = profile.parsed_profile?.skills || []
         const query = skills.length > 0 ? skills[0] : 'Software Engineer' // Simple fallback
-        const location = profile.city || 'Remote'
+
+        // Use target_location if set, otherwise fallback to city or Remote
+        const location = profile.target_location || profile.city || 'Remote'
+
+        // Log timezone preference (future implementation could schedule based on this)
+        if (profile.preferred_timezone) {
+            console.log(`User preferred timezone: ${profile.preferred_timezone}`)
+        }
 
         // 1. Search
         const searchResults = await searchJobsGoogle(query, location)

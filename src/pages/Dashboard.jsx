@@ -1,5 +1,6 @@
 import React from 'react'
 import { useAppContext } from '../App'
+import JobAgentSettings from '../components/JobAgentSettings'
 import { useNavigate } from 'react-router-dom'
 import { Briefcase, Send, Users, XCircle, TrendingUp, FileText, Search } from 'lucide-react'
 
@@ -107,6 +108,9 @@ export default function Dashboard() {
                     </>
                 )}
             </div>
+
+            {/* Job Agent Settings */}
+            {profile && <JobAgentSettings profile={profile} />}
 
             {/* Recent applications */}
             {applications.length > 0 && (
