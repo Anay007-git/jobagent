@@ -10,8 +10,11 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.95.3",
+    "axios": "^1.13.5",
+    "dotenv": "^17.2.4",
     "lucide-react": "^0.460.0",
     "mammoth": "^1.11.0",
+    "nodemailer": "^8.0.1",
     "pdfjs-dist": "^5.4.624",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
