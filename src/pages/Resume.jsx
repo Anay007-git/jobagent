@@ -91,7 +91,7 @@ export default function Resume() {
             const page = await pdf.getPage(i)
             const content = await page.getTextContent()
             const strings = content.items.map(item => item.str)
-            fullText += strings.join(' ') + '\n'
+            fullText += strings.join('\n') + '\n'
         }
 
         console.log('Extracted PDF Text Length:', fullText.length)

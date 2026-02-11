@@ -7,7 +7,7 @@ export function parseResume(text) {
     if (!text) throw new Error('No text provided')
 
     const lines = text.split('\n').map(l => l.trim()).filter(Boolean)
-    if (lines.length < 5) throw new Error('Text too short to analyze')
+    if (text.length < 50) throw new Error('Text too short to analyze')
 
     // --- Extract Basic Info ---
     const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)
