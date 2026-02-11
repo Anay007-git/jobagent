@@ -6,8 +6,8 @@ import { FileText, Sparkles, Trash2, Plus, User, Briefcase, GraduationCap, Troph
 import * as pdfjsLib from 'pdfjs-dist'
 import mammoth from 'mammoth'
 
-// Set PDF.js worker (using CDN for simplicity)
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`
+// Set PDF.js worker (using unpkg for v5+ support and .mjs)
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`
 
 export default function Resume() {
     const { profile, setProfile, showToast } = useAppContext()
