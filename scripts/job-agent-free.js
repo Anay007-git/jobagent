@@ -17,9 +17,9 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY     // AI Studio Key
 const EMAIL_USER = process.env.EMAIL_USER
 const EMAIL_PASS = process.env.EMAIL_PASS
 
-// Validation
-if (!SUPABASE_URL || !SUPABASE_KEY || !GOOGLE_SEARCH_KEY || !GOOGLE_CSE_CX || !GEMINI_API_KEY || !EMAIL_USER || !EMAIL_PASS) {
-    console.error('Missing required environment variables.')
+// Validation - Relaxed for local testing (Email optional)
+if (!SUPABASE_URL || !SUPABASE_KEY || !GOOGLE_SEARCH_KEY || !GOOGLE_CSE_CX || !GEMINI_API_KEY) {
+    console.error('Missing required environment variables (Database or Google Keys).')
     process.exit(1)
 }
 
@@ -27,10 +27,46 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user: EMAIL_USER, pass: EMAIL_PASS }
-})
+// Conditional Transporter
+let transporter = null
+if (EMAIL_USER && EMAIL_PASS) {
+    transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: { user: EMAIL_USER, pass: EMAIL_PASS }
+    })
+} else {
+    console.warn('⚠️  Email credentials missing. Running in DRY RUN mode (logging emails only).')
+}
+
+// ... (rest of searchJobsGoogle, scrapeJobDetails, parseWithGemini unchanged)
+
+// ...
+
+async function sendEmailDigest(to, name, jobs) {
+    const jobListHtml = jobs.map(job => `
+        <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 10px;">
+            <h3>${job.job_title}</h3>
+            <p><strong>${job.company}</strong> • ${job.location}</p>
+            <p>${job.summary}</p>
+            <a href="${job.apply_link}">Apply Now</a>
+        </div>
+    `).join('')
+
+    if (transporter) {
+        await transporter.sendMail({
+            from: `"Job Agent (Free)" <${EMAIL_USER}>`,
+            to: to,
+            subject: `🎯 ${jobs.length} New Jobs Found (Free Agent)`,
+            html: `<h2>Job Matches</h2>${jobListHtml}`
+        })
+        console.log(`Email sent to ${to}`)
+    } else {
+        console.log(`\n[DRY RUN] WOULD SEND EMAIL TO ${to}:`)
+        console.log(`Subject: 🎯 ${jobs.length} New Jobs Found (Free Agent)`)
+        console.log(`Body Snippet: ${jobListHtml.substring(0, 200)}...`)
+        console.log('---------------------------------------------------')
+    }
+}
 
 async function searchJobsGoogle(query, location) {
     const q = `${query} jobs in ${location} site:greenhouse.io OR site:lever.co OR site:workable.com` // Targeted search
@@ -148,24 +184,6 @@ async function runJobAgent() {
     }
 }
 
-async function sendEmailDigest(to, name, jobs) {
-    // reusing previous email logic...
-    const jobListHtml = jobs.map(job => `
-        <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 10px;">
-            <h3>${job.job_title}</h3>
-            <p><strong>${job.company}</strong> • ${job.location}</p>
-            <p>${job.summary}</p>
-            <a href="${job.apply_link}">Apply Now</a>
-        </div>
-    `).join('')
 
-    await transporter.sendMail({
-        from: `"Job Agent (Free)" <${EMAIL_USER}>`,
-        to: to,
-        subject: `🎯 ${jobs.length} New Jobs Found (Free Agent)`,
-        html: `<h2>Job Matches</h2>${jobListHtml}`
-    })
-    console.log(`Email sent to ${to}`)
-}
 
 runJobAgent()

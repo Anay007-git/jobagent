@@ -28,9 +28,9 @@ jobs:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           GOOGLE_SEARCH_KEY: ${{ secrets.GOOGLE_SEARCH_KEY }}
-          GOOGLE_CSE_CX: ${{ secrets.GOOGLE_CSE_CX }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}  # Still needed? No, we use GEMINI_API_KEY now
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: node scripts/job-agent-free.js
+        run: node scripts/job-agent-rss.js

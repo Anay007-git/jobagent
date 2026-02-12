@@ -14,13 +14,15 @@
     "axios": "^1.13.5",
     "cheerio": "^1.2.0",
     "dotenv": "^17.2.4",
+    "duck-duck-scrape": "^2.2.7",
     "lucide-react": "^0.460.0",
     "mammoth": "^1.11.0",
     "nodemailer": "^8.0.1",
     "pdfjs-dist": "^5.4.624",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.1.0"
+    "react-router-dom": "^7.1.0",
+    "rss-parser": "^3.13.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
