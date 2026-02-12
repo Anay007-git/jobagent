@@ -11,16 +11,27 @@ import { Search, MapPin, Copy, Check, Wifi, Briefcase } from 'lucide-react'
 
 export default function JobSearch() {
     const { profile, applications, setApplications, showToast } = useAppContext()
-    const [query, setQuery] = useState('')
-    const [location, setLocation] = useState('')
-    const [empType, setEmpType] = useState('')
-    const [remoteOnly, setRemoteOnly] = useState(false)
-    const [category, setCategory] = useState('all')
-    const [jobs, setJobs] = useState([])
+
+    // Load state from sessionStorage if available
+    const savedState = JSON.parse(sessionStorage.getItem('job_search_state') || '{}')
+
+    const [query, setQuery] = useState(savedState.query || '')
+    const [location, setLocation] = useState(savedState.location || '')
+    const [empType, setEmpType] = useState(savedState.empType || '')
+    const [remoteOnly, setRemoteOnly] = useState(savedState.remoteOnly || false)
+    const [category, setCategory] = useState(savedState.category || 'all')
+    const [jobs, setJobs] = useState(savedState.jobs || [])
+
     const [loading, setLoading] = useState(false)
     const [selectedJob, setSelectedJob] = useState(null)
     const [activeTab, setActiveTab] = useState('details')
     const [copied, setCopied] = useState('')
+
+    // Persist state changes
+    React.useEffect(() => {
+        const stateToSave = { query, location, empType, remoteOnly, category, jobs }
+        sessionStorage.setItem('job_search_state', JSON.stringify(stateToSave))
+    }, [query, location, empType, remoteOnly, category, jobs])
 
     const handleSearch = async () => {
         if (!query.trim()) { showToast('Enter a job title or keywords', 'error'); return }
